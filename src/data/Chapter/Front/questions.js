@@ -1,4 +1,3 @@
-// ====================== HTML SAVOLLARI ======================
 export const htmlQuestions = [
   {
     id: 1,

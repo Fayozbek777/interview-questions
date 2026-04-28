@@ -8,7 +8,7 @@ import {
   FiChevronRight,
 } from "react-icons/fi";
 import { SiJavascript, SiReact } from "react-icons/si";
-import techTasks from "../data/techData";
+import techTasks from "../data/Chapter/Front/techData";
 import { Link } from "react-router-dom";
 
 import { BsFillLightbulbFill } from "react-icons/bs";

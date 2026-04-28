@@ -1,52 +1,37 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { FiChevronDown, FiBookOpen, FiCode } from "react-icons/fi";
+import { FiChevronDown, FiBookOpen } from "react-icons/fi";
 
 const QuestionCard = ({ data }) => {
   const [isOpen, setIsOpen] = useState(false);
 
-  // Tab yoki savol o'zgarganda accordionni yopish
   useEffect(() => {
-    setIsOpen(false); // Tab o'zgarganda accordionni yopish
-  }, [data.uniqueId]); // ← Eng muhim qo'shimcha!
+    setIsOpen(false);
+  }, [data?.uniqueId]);
 
-  const getLevelStyles = (level) => {
-    switch (level?.toLowerCase()) {
-      case "beginner":
-      case "oddiy":
-        return "bg-green-100 text-green-700";
-      case "intermediate":
-      case "o'rta":
-        return "bg-yellow-100 text-yellow-700";
-      case "advanced":
-      case "qiyin":
-        return "bg-red-100 text-red-700";
-      default:
-        return "bg-slate-100 text-slate-700";
-    }
-  };
+  if (!data) return null;
 
   return (
-    <div className="mb-4 overflow-hidden border border-slate-200 rounded-2xl bg-white shadow-sm hover:shadow-md transition-shadow">
+    <div className="mb-4 overflow-hidden border border-zinc-900 bg-[#0d0d0d] group">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full flex items-center justify-between p-5 text-left hover:bg-slate-50 transition-colors focus:outline-none"
+        className="w-full flex items-center justify-between p-5 text-left focus:outline-none"
       >
         <div className="flex items-center gap-4">
-          <div className="p-2.5 bg-indigo-50 text-indigo-600 rounded-xl">
-            <FiBookOpen size={20} />
-          </div>
-          <h3 className="font-bold text-slate-800 text-lg leading-tight">
-            {data.title}
+          <FiBookOpen
+            className="text-zinc-700 group-hover:text-zinc-500 transition-colors"
+            size={16}
+          />
+          <h3 className="font-light text-zinc-300 text-sm tracking-wide group-hover:text-zinc-100 transition-colors uppercase">
+            {data.title || "Savol nomi yo'q"}
           </h3>
         </div>
-
         <motion.div
           animate={{ rotate: isOpen ? 180 : 0 }}
-          transition={{ type: "spring", stiffness: 200 }}
-          className="text-slate-400"
+          transition={{ duration: 0.3 }}
+          className="text-zinc-800"
         >
-          <FiChevronDown size={24} />
+          <FiChevronDown size={18} />
         </motion.div>
       </button>
 
@@ -56,51 +41,35 @@ const QuestionCard = ({ data }) => {
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.3, ease: "easeInOut" }}
-            className="overflow-hidden"
+            transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
           >
-            <div className="p-6 border-t border-slate-100 bg-slate-50">
-              <div className="prose prose-slate max-w-none text-slate-600 leading-relaxed">
-                <p className="whitespace-pre-line">{data.text}</p>
+            <div className="px-6 pb-6 pt-2 border-t border-zinc-900/50 bg-[#0a0a0a]">
+              {/* Улучшенный текст ответа */}
+              <div className="text-zinc-200 text-sm leading-relaxed font-normal whitespace-pre-line tracking-wide">
+                {data.text || "Javob mavjud emas."}
               </div>
 
               {data.code && (
-                <div className="mt-5 relative group">
-                  <div className="absolute right-3 top-3 flex items-center gap-1 text-[10px] font-bold text-slate-500 uppercase tracking-widest bg-white/50 px-2 py-1 rounded">
-                    <FiCode /> Code
+                <div className="mt-5 relative">
+                  {/* Добавили метку кода для стиля */}
+                  <div className="text-[10px] text-zinc-600 mb-2 font-mono uppercase tracking-widest">
+                    {"// code_snippet"}
                   </div>
-                  <pre className="p-4 bg-slate-900 rounded-xl overflow-x-auto border border-slate-800 shadow-inner custom-scrollbar">
-                    <code className="text-blue-300 font-mono text-sm leading-relaxed">
+                  <pre className="p-4 bg-black border border-zinc-900 rounded-sm overflow-x-auto shadow-inner">
+                    <code className="text-zinc-300 font-mono text-[12px] leading-relaxed">
                       {data.code}
                     </code>
                   </pre>
                 </div>
               )}
 
-              {data.details && (
-                <ul className="mt-4 space-y-2">
-                  {data.details.map((detail, index) => (
-                    <li
-                      key={index}
-                      className="flex items-start gap-2 text-sm text-slate-500"
-                    >
-                      <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-indigo-400 flex-shrink-0" />
-                      {detail}
-                    </li>
-                  ))}
-                </ul>
-              )}
-
-              <div className="mt-6 flex items-center justify-between">
-                <span
-                  className={`px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-wider ${getLevelStyles(
-                    data.level,
-                  )}`}
-                >
-                  {data.level || "Beginner"}
+              {/* Подвал карточки */}
+              <div className="mt-8 flex items-center justify-between border-t border-zinc-900 pt-4 text-[10px] uppercase tracking-[0.2em] text-zinc-500 font-medium">
+                <span className="bg-zinc-900/50 border border-zinc-800 px-2 py-1 text-zinc-400">
+                  {data.level || "Standard"}
                 </span>
-                <span className="text-[10px] text-slate-400 font-medium">
-                  ID: #{data.id}
+                <span className="font-mono opacity-40">
+                  REF_ID: {data.id || "N/A"}
                 </span>
               </div>
             </div>
