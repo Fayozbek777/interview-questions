@@ -12,7 +12,8 @@ const QuestionCard = ({ data }) => {
   if (!data) return null;
 
   return (
-    <div className="mb-4 overflow-hidden border border-zinc-900 bg-[#0d0d0d] group">
+    <div className="mb-4 overflow-hidden border border-zinc-900 bg-[#0d0d0d] group rounded-sm">
+      {/* HEADER */}
       <button
         onClick={() => setIsOpen(!isOpen)}
         className="w-full flex items-center justify-between p-5 text-left focus:outline-none"
@@ -26,6 +27,7 @@ const QuestionCard = ({ data }) => {
             {data.title || "Savol nomi yo'q"}
           </h3>
         </div>
+
         <motion.div
           animate={{ rotate: isOpen ? 180 : 0 }}
           transition={{ duration: 0.3 }}
@@ -35,36 +37,58 @@ const QuestionCard = ({ data }) => {
         </motion.div>
       </button>
 
+      {/* CONTENT */}
       <AnimatePresence initial={false}>
         {isOpen && (
           <motion.div
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+            transition={{ duration: 0.3 }}
           >
-            <div className="px-6 pb-6 pt-2 border-t border-zinc-900/50 bg-[#0a0a0a]">
-              {/* Улучшенный текст ответа */}
-              <div className="text-zinc-200 text-sm leading-relaxed font-normal whitespace-pre-line tracking-wide">
+            <div className="px-6 pb-6 pt-2 border-t border-zinc-900/50 bg-[#0a0a0a] space-y-4">
+              {/* ANSWER */}
+              <div className="text-zinc-200 text-sm leading-relaxed whitespace-pre-line">
                 {data.text || "Javob mavjud emas."}
               </div>
 
-              {data.code && (
-                <div className="mt-5 relative">
-                  {/* Добавили метку кода для стиля */}
-                  <div className="text-[10px] text-zinc-600 mb-2 font-mono uppercase tracking-widest">
-                    {"// code_snippet"}
+              {/* 🔥 REAL LIFE */}
+              {data.realLife && (
+                <div className="border-l border-yellow-700 pl-4 text-xs text-yellow-500 bg-yellow-900/10 py-2 rounded-sm">
+                  💡 {data.realLife}
+                </div>
+              )}
+
+              {/* 🔥 DIAGRAM */}
+              {data.diagram && (
+                <div>
+                  <div className="text-[10px] text-zinc-600 mb-2 uppercase tracking-widest">
+                    diagram
                   </div>
-                  <pre className="p-4 bg-black border border-zinc-900 rounded-sm overflow-x-auto shadow-inner">
-                    <code className="text-zinc-300 font-mono text-[12px] leading-relaxed">
+                  <pre className="p-4 bg-black border border-zinc-900 rounded-sm overflow-x-auto">
+                    <code className="text-green-400 font-mono text-xs whitespace-pre">
+                      {data.diagram}
+                    </code>
+                  </pre>
+                </div>
+              )}
+
+              {/* CODE */}
+              {data.code && (
+                <div>
+                  <div className="text-[10px] text-zinc-600 mb-2 uppercase tracking-widest">
+                    code
+                  </div>
+                  <pre className="p-4 bg-black border border-zinc-900 rounded-sm overflow-x-auto">
+                    <code className="text-zinc-300 font-mono text-xs whitespace-pre">
                       {data.code}
                     </code>
                   </pre>
                 </div>
               )}
 
-              {/* Подвал карточки */}
-              <div className="mt-8 flex items-center justify-between border-t border-zinc-900 pt-4 text-[10px] uppercase tracking-[0.2em] text-zinc-500 font-medium">
+              {/* FOOTER */}
+              <div className="mt-6 flex items-center justify-between border-t border-zinc-900 pt-4 text-[10px] uppercase tracking-[0.2em] text-zinc-500">
                 <span className="bg-zinc-900/50 border border-zinc-800 px-2 py-1 text-zinc-400">
                   {data.level || "Standard"}
                 </span>

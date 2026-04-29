@@ -6,26 +6,78 @@ import { Link } from "react-router-dom";
 import QuestionCard from "../../components/QuestionCard";
 
 import { pythonJuniorQuestions } from "../../data/Chapter/Back/pythonJunior";
+import { pythonMiddleQuestions } from "../../data/Chapter/Back/pythonMiddle";
 import { pythonAdvancedQuestions } from "../../data/Chapter/Back/pythonAdvanced";
+
 const Backend = () => {
   const [activeLevel, setActiveLevel] = useState("Junior");
   const [searchTerm, setSearchTerm] = useState("");
   const [parent] = useAutoAnimate({ duration: 300 });
 
-  const levels = ["Junior", "Advanced"];
+  const levels = ["Junior", "Middle", "Advanced"];
 
   const currentLevelData = useMemo(() => {
-    return activeLevel === "Junior"
-      ? pythonJuniorQuestions || []
-      : pythonAdvancedQuestions || [];
+    switch (activeLevel) {
+      case "Junior":
+        return pythonJuniorQuestions || [];
+
+        const QuestionCard = ({ data }) => {
+          const [open, setOpen] = useState(false);
+
+          return (
+            <div
+              onClick={() => setOpen(!open)}
+              className="border border-zinc-900 bg-[#0d0d0d] p-4 rounded-sm cursor-pointer hover:border-zinc-700 transition-all"
+            >
+              {/* Question */}
+              <h2 className="text-sm text-zinc-200 tracking-wide">
+                {data.title}
+              </h2>
+
+              {/* Answer */}
+              {open && (
+                <div className="mt-3 space-y-3">
+                  <p className="text-xs text-zinc-400 leading-relaxed">
+                    {data.text}
+                  </p>
+
+                  {/* 🔥 REAL LIFE */}
+                  {data.realLife && (
+                    <div className="text-xs text-zinc-500 border-l border-zinc-800 pl-3">
+                      💡 {data.realLife}
+                    </div>
+                  )}
+
+                  {/* 🔥 DIAGRAM */}
+                  {data.diagram && (
+                    <pre className="text-xs text-green-400 bg-black p-3 rounded overflow-x-auto">
+                      {data.diagram}
+                    </pre>
+                  )}
+                </div>
+              )}
+            </div>
+          );
+        };
+
+      case "Middle":
+        return pythonMiddleQuestions || [];
+      case "Advanced":
+        return pythonAdvancedQuestions || [];
+      default:
+        return [];
+    }
   }, [activeLevel]);
 
+  // 🔥 Filter + mapping
   const filteredData = useMemo(() => {
     return currentLevelData
       .map((q, index) => ({
         ...q,
         title: q.question || q.title || `Python Question ${index + 1}`,
         text: q.answer || q.text || "",
+        realLife: q.realLife || "",
+        diagram: q.diagram || "",
         uniqueId: `py-${activeLevel.toLowerCase()}-${q.id || index}`,
       }))
       .filter(
@@ -49,14 +101,14 @@ const Backend = () => {
           </p>
         </header>
 
-        {/* Level Switcher (Tabs) */}
+        {/* Level Tabs */}
         <nav className="flex justify-center gap-8 mb-10 border-b border-zinc-900 pb-4">
           {levels.map((lvl) => (
             <button
               key={lvl}
               onClick={() => {
                 setActiveLevel(lvl);
-                setSearchTerm(""); // Очистка поиска при смене уровня
+                setSearchTerm("");
               }}
               className={`text-[10px] tracking-[0.3em] uppercase transition-all relative pb-2 ${
                 activeLevel === lvl
@@ -75,7 +127,7 @@ const Backend = () => {
           ))}
         </nav>
 
-        {/* Search Bar */}
+        {/* Search */}
         <div className="mb-10">
           <input
             type="text"
@@ -86,7 +138,7 @@ const Backend = () => {
           />
         </div>
 
-        {/* Questions List */}
+        {/* Questions */}
         <section ref={parent} className="space-y-4">
           {filteredData.length > 0 ? (
             filteredData.map((item) => (
@@ -101,7 +153,7 @@ const Backend = () => {
           )}
         </section>
 
-        {/* Return Link */}
+        {/* Footer */}
         <footer className="mt-20 text-center">
           <Link
             to="/"
